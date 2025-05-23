@@ -14,7 +14,7 @@ def split_nodes_image(old_nodes):
     img_pattern = r'!\[([^\]]+)\]\(([^)]+)\)'
     
     for node in old_nodes:
-        if node.text_type != TextType.PLAIN:
+        if node.text_type != TextType.TEXT:
             new_nodes.append(node)
             continue
 
@@ -26,7 +26,7 @@ def split_nodes_image(old_nodes):
 
             # Text before image
             if start > last_index:
-                new_nodes.append(TextNode(text[last_index:start], TextType.PLAIN))
+                new_nodes.append(TextNode(text[last_index:start], TextType.TEXT))
             
             # Image node
             new_nodes.append(TextNode(alt, TextType.IMAGE, url))
@@ -34,7 +34,7 @@ def split_nodes_image(old_nodes):
 
         # Remaining text after last match
         if last_index < len(text):
-            new_nodes.append(TextNode(text[last_index:], TextType.PLAIN))
+            new_nodes.append(TextNode(text[last_index:], TextType.TEXT))
     
     return new_nodes
 
@@ -43,7 +43,7 @@ def split_nodes_link(old_nodes):
     link_pattern = r'(?<!!)\[([^\]]+)\]\(([^)]+)\)'
 
     for node in old_nodes:
-        if node.text_type != TextType.PLAIN:
+        if node.text_type != TextType.TEXT:
             new_nodes.append(node)
             continue
 
@@ -54,12 +54,12 @@ def split_nodes_link(old_nodes):
             label, url = match.groups()
 
             if start > last_index:
-                new_nodes.append(TextNode(text[last_index:start], TextType.PLAIN))
+                new_nodes.append(TextNode(text[last_index:start], TextType.TEXT))
 
             new_nodes.append(TextNode(label, TextType.LINK, url))
             last_index = end
 
         if last_index < len(text):
-            new_nodes.append(TextNode(text[last_index:], TextType.PLAIN))
+            new_nodes.append(TextNode(text[last_index:], TextType.TEXT))
 
     return new_nodes

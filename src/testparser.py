@@ -11,13 +11,13 @@ class TestTextToTextNodes(unittest.TestCase):
             "a [link](https://boot.dev)"
         )
         expected = [
-            TextNode("This is ", TextType.PLAIN),
+            TextNode("This is ", TextType.TEXT),
             TextNode("text", TextType.BOLD),
-            TextNode(" with an ", TextType.PLAIN),
+            TextNode(" with an ", TextType.TEXT),
             TextNode("italic", TextType.ITALIC),
-            TextNode(" word and an ", TextType.PLAIN),
+            TextNode(" word and an ", TextType.TEXT),
             TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
-            TextNode(" and a ", TextType.PLAIN),
+            TextNode(" and a ", TextType.TEXT),
             TextNode("link", TextType.LINK, "https://boot.dev"),
         ]
         self.assertEqual(text_to_textnodes(text), expected)

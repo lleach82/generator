@@ -38,12 +38,12 @@ class TestMarkdownExtractors(unittest.TestCase):
     def test_split_images_single(self):
         node = TextNode(
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)",
-            TextType.PLAIN,
+            TextType.TEXT,
         )
         new_nodes = split_nodes_image([node])
         self.assertListEqual(
             [
-                TextNode("This is text with an ", TextType.PLAIN),
+                TextNode("This is text with an ", TextType.TEXT),
                 TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
             ],
             new_nodes,
@@ -52,33 +52,33 @@ class TestMarkdownExtractors(unittest.TestCase):
     def test_split_images_multiple(self):
         node = TextNode(
             "![one](url1) middle ![two](url2) end",
-            TextType.PLAIN,
+            TextType.TEXT,
         )
         new_nodes = split_nodes_image([node])
         self.assertListEqual(
             [
                 TextNode("one", TextType.IMAGE, "url1"),
-                TextNode(" middle ", TextType.PLAIN),
+                TextNode(" middle ", TextType.TEXT),
                 TextNode("two", TextType.IMAGE, "url2"),
-                TextNode(" end", TextType.PLAIN),
+                TextNode(" end", TextType.TEXT),
             ],
             new_nodes,
         )
 
     def test_split_images_none(self):
-        node = TextNode("No images here.", TextType.PLAIN)
+        node = TextNode("No images here.", TextType.TEXT)
         new_nodes = split_nodes_image([node])
         self.assertListEqual([node], new_nodes)
 
     def test_split_links_single(self):
         node = TextNode(
             "Text with a [link](https://example.com)",
-            TextType.PLAIN,
+            TextType.TEXT,
         )
         new_nodes = split_nodes_link([node])
         self.assertListEqual(
             [
-                TextNode("Text with a ", TextType.PLAIN),
+                TextNode("Text with a ", TextType.TEXT),
                 TextNode("link", TextType.LINK, "https://example.com"),
             ],
             new_nodes,
@@ -87,28 +87,28 @@ class TestMarkdownExtractors(unittest.TestCase):
     def test_split_links_multiple(self):
         node = TextNode(
             "[One](url1) and [Two](url2) and done.",
-            TextType.PLAIN,
+            TextType.TEXT,
         )
         new_nodes = split_nodes_link([node])
         self.assertListEqual(
             [
                 TextNode("One", TextType.LINK, "url1"),
-                TextNode(" and ", TextType.PLAIN),
+                TextNode(" and ", TextType.TEXT),
                 TextNode("Two", TextType.LINK, "url2"),
-                TextNode(" and done.", TextType.PLAIN),
+                TextNode(" and done.", TextType.TEXT),
             ],
             new_nodes,
         )
 
     def test_split_links_none(self):
-        node = TextNode("No links here.", TextType.PLAIN)
+        node = TextNode("No links here.", TextType.TEXT)
         new_nodes = split_nodes_link([node])
         self.assertListEqual([node], new_nodes)
 
     def test_links_and_images_are_separate(self):
         node = TextNode(
             "A link [text](url) and an ![image](img)",
-            TextType.PLAIN,
+            TextType.TEXT,
         )
         links = split_nodes_link([node])
         images = split_nodes_image([node])

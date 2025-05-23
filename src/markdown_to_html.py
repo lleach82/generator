@@ -8,8 +8,8 @@ from splitnodes import split_nodes_delimiter
 
 
 def text_to_children(text):
-    nodes = [TextNode(text, TextType.PLAIN)]
-    for delimiter, text_type in [("**", TextType.BOLD), ("*", TextType.ITALIC), ("_", TextType.ITALIC)]:
+    nodes = [TextNode(text, TextType.TEXT)]
+    for delimiter, text_type in [("**", TextType.BOLD), ("`", TextType.CODE), ("*", TextType.ITALIC), ("_", TextType.ITALIC)]:
         nodes = split_nodes_delimiter(nodes, delimiter, text_type)
     nodes = split_nodes_image(nodes)
     nodes = split_nodes_link(nodes)
@@ -25,7 +25,7 @@ def block_to_html_node(block):
 
     elif block_type == BlockType.HEADING:
         heading_level = len(block.split(" ")[0])  # Count #s
-        heading_text = block[heading_level+1:].strip()
+        heading_text = block[heading_level:].strip()
         return ParentNode(f"h{heading_level}", text_to_children(heading_text))
 
     elif block_type == BlockType.CODE:
@@ -50,6 +50,18 @@ def block_to_html_node(block):
 
 
 def markdown_to_html_node(markdown):
+    children = []
     blocks = markdown_to_blocks(markdown)
-    children = [block_to_html_node(block) for block in blocks]
+
+    for block in blocks:
+        children.append(block_to_html_node(block))
+
     return ParentNode("div", children)
+
+
+def extract_title(markdown: str) -> str:
+    for line in markdown.splitlines():
+        stripped_line = line.lstrip()
+        if stripped_line.startswith("# "):
+            return stripped_line[2:].strip()
+    raise ValueError("No H1 header found in markdown")

@@ -1,8 +1,16 @@
 import os
 import shutil
+from markdown_to_html import markdown_to_html_node, extract_title
+from gencontent import generate_pages_recursive
 
+def move_contents():
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # /path/to/generator/src
+    src = os.path.join(script_dir, "../static")
+    dest = os.path.join(script_dir, "../public")
 
-def move_contents(src="../static", dest="../public"):
+    src = os.path.abspath(src)
+    dest = os.path.abspath(dest)
+
     if os.path.exists(dest):
         shutil.rmtree(dest)
     os.mkdir(dest)
@@ -17,10 +25,12 @@ def move_contents(src="../static", dest="../public"):
             else:
                 shutil.copy(src_item, dest_item)
                 print(f"Copied file: {dest_item}")
+
     recursive_copy(src, dest)
 
 def main():
     move_contents()
+    generate_pages_recursive("content", "template.html", "public")
 
 if __name__ == "__main__":
     main()

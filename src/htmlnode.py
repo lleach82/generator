@@ -1,4 +1,5 @@
 from textnode import TextNode, TextType
+from parser import text_to_textnodes
 
 class HTMLNode:
     def __init__(self, tag=None, value=None, children=None, props=None):
@@ -53,12 +54,14 @@ def text_node_to_html_node(text_node):
     if not isinstance(text_node, TextNode):
         raise TypeError("Expected a TextNode")
     
-    if text_node.text_type == TextType.PLAIN:
+    if text_node.text_type == TextType.TEXT:
         return LeafNode(None, text_node.text)
     elif text_node.text_type == TextType.BOLD:
         return LeafNode("b", text_node.text)
     elif text_node.text_type == TextType.ITALIC:
         return LeafNode("i", text_node.text)
+    elif text_node.text_type == TextType.CODE:
+        return LeafNode("code", text_node.text)
     elif text_node.text_type == TextType.LINK:
         if not text_node.url:
             raise ValueError("Link TextNode must have a URL.")

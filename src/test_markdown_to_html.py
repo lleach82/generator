@@ -1,5 +1,5 @@
 import unittest
-from markdown_to_html import markdown_to_html_node
+from markdown_to_html import markdown_to_html_node, extract_title
 
 class TestMarkdownToHtmlNode(unittest.TestCase):
 
@@ -37,6 +37,17 @@ This is another paragraph with _italic_ text
         md = "1. First\n2. Second\n3. Third"
         html = markdown_to_html_node(md).to_html()
         self.assertEqual(html, "<div><ol><li>First</li><li>Second</li><li>Third</li></ol></div>")
+
+class TestExtractTitle(unittest.TestCase):
+    def test_extract_title_basic(self):
+        self.assertEqual(extract_title("# Hello"), "Hello")
+
+    def test_extract_title_with_spaces(self):
+        self.assertEqual(extract_title("   #   Hello World   "), "Hello World")
+
+    def test_extract_title_missing(self):
+        with self.assertRaises(ValueError):
+            extract_title("## Subheading\nText without H1")
 
 if __name__ == '__main__':
     unittest.main()

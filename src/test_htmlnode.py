@@ -21,7 +21,7 @@ class TestHTMLNode(unittest.TestCase):
         self.assertEqual(repr(node), expected_repr)
 
     def test_plain_text(self):
-        node = TextNode("This is plain text", TextType.PLAIN)
+        node = TextNode("This is plain text", TextType.TEXT)
         html_node = text_node_to_html_node(node)
         self.assertIsInstance(html_node, LeafNode)
         self.assertEqual(html_node.tag, None)
